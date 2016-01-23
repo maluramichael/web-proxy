@@ -25,12 +25,16 @@ const addToCache = (uri)=> {
 };
 
 var download = function (uri, filename, callback) {
-	request.head(uri, function (err, res, body) {
-		if (err) return;
-		//console.log('content-type:', res.headers['content-type']);
-		//console.log('content-length:', res.headers['content-length']);
-		request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
-	});
+	try {
+		request.head(uri, function (err, res, body) {
+			if (err) return;
+			//console.log('content-type:', res.headers['content-type']);
+			//console.log('content-length:', res.headers['content-length']);
+			request(uri).pipe(fs.createWriteStream(filename)).on('close', callback);
+		});
+	} catch (e) {
+		console.log(e);
+	}
 };
 
 var server = http.createServer(function (req, res) {
